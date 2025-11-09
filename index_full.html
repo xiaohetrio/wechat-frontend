@@ -719,15 +719,26 @@
         audioPlayer.src = audioUrl;
         await audioPlayer.play();
 
-        // 自动下载 MP3 文件
-        const downloadLink = document.createElement('a');
-        downloadLink.href = audioUrl;
-        downloadLink.download = `voice_${data.audio_id}.mp3`;
-        downloadLink.style.display = 'none';
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-        console.log(`💾 已自动下载: voice_${data.audio_id}.mp3`);
+        // 下载 MP3 文件（跨域兼容方式）
+        try {
+          const audioResponse = await fetch(audioUrl);
+          const audioBlob = await audioResponse.blob();
+          const blobUrl = URL.createObjectURL(audioBlob);
+          
+          const downloadLink = document.createElement('a');
+          downloadLink.href = blobUrl;
+          downloadLink.download = `voice_${data.audio_id}.mp3`;
+          downloadLink.style.display = 'none';
+          document.body.appendChild(downloadLink);
+          downloadLink.click();
+          document.body.removeChild(downloadLink);
+          
+          // 清理 blob URL
+          setTimeout(() => URL.revokeObjectURL(blobUrl), 100);
+          console.log(`💾 已自动下载: voice_${data.audio_id}.mp3`);
+        } catch (downloadError) {
+          console.warn('自动下载失败:', downloadError);
+        }
 
         button.textContent = "转语音";
         button.disabled = false;
