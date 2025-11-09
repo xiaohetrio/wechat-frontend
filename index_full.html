@@ -715,8 +715,19 @@
         const audioUrl = `https://wechatdeploy.onrender.com${data.audio_url}`;
         console.log('🎵 音频 URL:', audioUrl);
         
+        // 播放音频
         audioPlayer.src = audioUrl;
         await audioPlayer.play();
+
+        // 自动下载 MP3 文件
+        const downloadLink = document.createElement('a');
+        downloadLink.href = audioUrl;
+        downloadLink.download = `voice_${data.audio_id}.mp3`;
+        downloadLink.style.display = 'none';
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+        console.log(`💾 已自动下载: voice_${data.audio_id}.mp3`);
 
         button.textContent = "转语音";
         button.disabled = false;
