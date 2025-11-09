@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>微信男友聊天</title>
-  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
+  <link rel="icon" type="image/svg+xml" href="static/favicon.svg" />
   <style>
     /* 全局样式 */
     body {
@@ -690,6 +690,8 @@
       button.textContent = "加载语音...";
 
       try {
+        console.log('📤 发送 TTS 请求:', messageContent);
+        
         const response = await fetch(BACKEND_TTS_URL, {
           method: "POST",
           headers: {
@@ -698,22 +700,30 @@
           body: JSON.stringify({ text: messageContent }),
         });
 
+        console.log('📥 TTS 响应状态:', response.status);
+
         if (!response.ok) {
+          const errorText = await response.text();
+          console.error('❌ TTS 错误响应:', errorText);
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
         // Render 后端返回 JSON 格式：{audio_url: "/audio/xxx.mp3", audio_id: "xxx"}
         const data = await response.json();
+        console.log('✅ TTS 响应数据:', data);
+        
         const audioUrl = `https://wechatdeploy.onrender.com${data.audio_url}`;
+        console.log('🎵 音频 URL:', audioUrl);
+        
         audioPlayer.src = audioUrl;
-        audioPlayer.play();
+        await audioPlayer.play();
 
         button.textContent = "转语音";
         button.disabled = false;
 
       } catch (error) {
-        console.error("语音合成失败:", error);
-        alert("语音合成失败，请检查后端服务。");
+        console.error("❌ 语音合成失败:", error);
+        alert(`语音合成失败: ${error.message}`);
         button.disabled = false;
         button.textContent = "转语音";
       }
