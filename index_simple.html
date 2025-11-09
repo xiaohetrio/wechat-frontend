@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微信聊天 - Python版</title>
+    <link rel="icon" href="static/favicon.svg" type="image/svg+xml">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #ededed;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            height: 100vh;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            background: #1a1a1a;
+            color: white;
+            padding: 15px;
+            border-bottom: 1px solid #e5e5e5;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header h1 {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .status {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .status.online {
+            color: #07c160;
+        }
+
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .message.me {
+            flex-direction: row-reverse;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 5px;
+            margin: 0 10px;
+            background: #07c160;
+            color: white;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .message.other .avatar {
+            background: #576b95;
+        }
+
+        .bubble {
+            max-width: 60%;
+            padding: 10px 15px;
+            border-radius: 5px;
+            position: relative;
+            word-wrap: break-word;
+            line-height: 1.5;
+        }
+
+        .message.me .bubble {
+            background: #95ec69;
+            margin-right: 10px;
+        }
+
+        .message.other .bubble {
+            background: white;
+            margin-left: 10px;
+        }
+
+        .message.system .bubble {
+            background: #ffebee;
+            color: #c62828;
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        .input-area {
+            background: #f7f7f7;
+            padding: 10px;
+            border-top: 1px solid #e5e5e5;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-box {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #e5e5e5;
+            border-radius: 5px;
+            font-size: 14px;
+            resize: none;
+            max-height: 100px;
+            min-height: 40px;
+            font-family: inherit;
+        }
+
+        .send-btn, .voice-btn {
+            padding: 10px 20px;
+            background: #07c160;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .send-btn:disabled, .voice-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .voice-btn {
+            background: #576b95;
+        }
+
+        .voice-btn:hover:not(:disabled) {
+            background: #465a86;
+        }
+
+        .send-btn:hover:not(:disabled) {
+            background: #06ad56;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>雷铁流</h1>
+            <span class="status" id="status">连接中...</span>
+        </div>
+
+        <div class="messages" id="messages">
+            <!-- 消息会动态添加到这里 -->
+        </div>
+
+        <div class="input-area">
+            <textarea 
+                id="input" 
+                class="input-box" 
+                placeholder="输入消息..."
+                rows="1"
+            ></textarea>
+            <button id="sendBtn" class="send-btn">发送</button>
+            <button id="voiceBtn" class="voice-btn" disabled>语音</button>
+        </div>
+    </div>
+
+    <script type="module" src="static/chat_simple.js"></script>
+</body>
+</html>
